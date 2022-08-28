@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+<!--
+This demonstrates one way to achieve animation.
+I took Angel's Rotating Square 2 and added a color picker using buffered color data.
+This also demonstrates drawing multiple primitives.
+-->
+
+<title>Rotating Square and More with Color Choice</title>
+
+<!-- Vertex shader -->
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+attribute vec4 vPosition;
+uniform float theta;
+
+attribute vec3 vColor;
+varying vec4 color;
+
+
+void main()
+{
+
+
+
+    //float dd = sqrt(vPosition.x * vPosition.x );
+    float dd = theta/theta;
+
+
+    float s = sin( theta);
+    float c = cos( theta);
+
+
+   gl_PointSize = 10.0;
+
+
+	gl_Position.x =  c * vPosition.x - s * vPosition.y;
+    gl_Position.y =  s * vPosition.x + c * vPosition.y;
+
+    gl_Position.z = 0.0;
+    gl_Position.w = 1.0;
+
+
+
+    color = vec4(vColor, 1.0);
+
+}
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+
+precision mediump float;
+varying vec4 color;
+
+
+void main()
+{
+    gl_FragColor = color;
+}
+</script>
+
+<script type="text/javascript" src="webgl-utils.js"></script>
+<script type="text/javascript" src="initShaders.js"></script>
+<script type="text/javascript" src="MV.js"></script>
+<script type="text/javascript" src="rotatingSquare2Color.js"></script>
+</head>
+
+<body style="font-family: Arial";>
+<div>
+
+<canvas id="gl-canvas" width="600" height="600" style="border:2px solid #000000;">
+
+Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
+
+
+<div>
+
+
+This program is based on Angel's rotatingSquare codes. It demonstrates
+<ul>
+<li>event handling </li>
+<li>drawing multiple primitives. </li>
+<li>drawing with multiple colors </li>
+<li>color picker using buffered color data </li>
+<li>viewport on resize event (Open the Console to see viewport resize prints)</br>
+Read the"Resize Event Info" section below.</li>
+</ul>
+</div>
+
+<div>
+
+<button id="Direction">Change Rotation Direction</button>
+<button id="ChangeColor">Change Color</button>
+
+
+<select id="Controls" size="3">
+    <option value="0">Toggle Rotation Direction</option>
+    <option value="1">Spin Faster</option>
+    <option value="2">Spin Slower</option>
+</select>
+</div>
+
+<!--Play music-->
+        <div style="font-size: 25px;">
+            <strong>Music:</strong>
+
+            <audio controls autoplay>
+                <source id="music" src="audio.mp3" type="audio/mp3">
+            </audio>
+			</div>
+
+<div>
+<h3>Resize Event Info</h3>
+<p> Try resizing the width and/or height of the browser so that it is smaller than the canvas</p>
+<ul>
+<li>The implementation assumes that the canvas is at the top of the page. </li>
+<li>The canvas is defined with a fixed pixel width and height. Normally, the aspect ratio is one to
+avoid distortion of the geometry.</li>
+<li>Initially, the viewport is set to be equal to the canvas (in the JS code).</li>
+<li>If  the browser is resized so that the height or width is less than the canvas width and height, then a change in the viewport is made. </li>
+<li>The minimum of the width and height of the browser (window.inner{width, height}) is used for the viewport width and height in order to maintain an aspect ratio of one. </li>
+<li>The lower-left corner of the viewport is positioned so the viewport occupies the upper-left part of the canvas.</li>
+
+</ul>
+
+Author: Dianne Hansford
+
+</body>
+</html>

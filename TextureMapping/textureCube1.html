@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+</head>
+
+<style type="text/css">
+    canvas { background: blue; }
+</style>
+
+
+
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+
+attribute  vec4 vPosition;
+attribute  vec4 vColor;
+attribute  vec2 vTexCoord;
+
+varying vec4 fColor;
+varying vec2 fTexCoord;
+
+uniform vec3 theta;
+
+void main() 
+{
+    // Compute the sines and cosines of theta for each of
+    //   the three axes in one computation.
+    vec3 angles = radians( theta );
+    vec3 c = cos( angles );
+    vec3 s = sin( angles );
+
+    // Remeber: thse matrices are column-major
+    mat4 rx = mat4( 1.0,  0.0,  0.0, 0.0,
+		    0.0,  c.x,  s.x, 0.0,
+		    0.0, -s.x,  c.x, 0.0,
+		    0.0,  0.0,  0.0, 1.0 );
+
+    mat4 ry = mat4( c.y, 0.0, -s.y, 0.0,
+		    0.0, 1.0,  0.0, 0.0,
+		    s.y, 0.0,  c.y, 0.0,
+		    0.0, 0.0,  0.0, 1.0 );
+
+    mat4 rz = mat4( c.z, -s.z, 0.0, 0.0,
+		    s.z,  c.z, 0.0, 0.0,
+		    0.0,  0.0, 1.0, 0.0,
+		    0.0,  0.0, 0.0, 1.0 );
+                
+    fColor = vColor;
+    fTexCoord = vTexCoord;
+    gl_Position = rz * ry * rx * vPosition;
+} 
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+
+precision mediump float;
+
+varying vec4 fColor;
+varying  vec2 fTexCoord;
+
+uniform sampler2D texture;
+
+void
+main()
+{
+    //demo: Two options: blend with vertex color (modulate) 
+	// or use texture only (decal)
+	
+    gl_FragColor = fColor * texture2D( texture, fTexCoord );
+	//gl_FragColor = texture2D( texture, fTexCoord );
+}
+</script>
+
+<script type="text/javascript" src="../Common/webgl-utils.js"></script>
+<script type="text/javascript" src="../Common/initShaders.js"></script>
+<script type="text/javascript" src="../Common/MV.js"></script>
+<script type="text/javascript" src="textureCube1.js"></script>
+
+
+<body>
+
+<p>
+This program must be run from
+http://www.farinhansford.com/dianne/teaching/cse470/TextureMapping/textureCube1.html . If you open a copy of this program hosted on your computer, it will have a CORS error due to safety measures implemented in all the main browsers.(Open the Inspector to see the error.)
+<br>
+This program demonstrates
+<ul>
+<li> Loading a gif image as the texture</li>
+<li> How to set texture coordinates for a cube</li>
+<li> Using the sampler to interpolate texture coordinates in the fragment shader</li>
+<li> In the fragment shader the color assigned to each face of the cube is blended with the color of the texture. Notice that the logo has a different color on each face.</li>
+<li>See the configureTexture function for settings. This uses the FLIP setting because of the organization of gif files.</li>
+<li>See the end of the HTML body to see one way to read texture file using an attribute of the img element.</li>
+</ul>
+
+</p>
+
+
+<canvas id="gl-canvas" width="512" height="512">
+Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
+<button id = "ButtonX">Rotate X</button>
+<button id = "ButtonY">Rotate Y</button>
+<button id = "ButtonZ">Rotate Z</button>
+
+
+<!-- one way to read the texture image. See JS code for getElementByID -->
+ 
+<img id = "texImage" src = "SA2011_black.gif"></img>
+
+</body>
+</html>

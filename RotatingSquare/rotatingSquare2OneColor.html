@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<!-- Add color change interaction with one color for all vertices -->
+
+<title>Rotating Square</title>
+
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+attribute vec4 vPosition;
+uniform float theta;
+uniform vec3 vColor;
+varying vec4 fColor;
+
+void main()
+{
+    float s = sin( theta );
+    float c = cos( theta );
+
+    gl_Position.x = -s * vPosition.x + c * vPosition.y;
+    gl_Position.y =  s * vPosition.y + c * vPosition.x;
+    gl_Position.z = 0.0;
+    gl_Position.w = 1.0;
+
+	fColor = vec4(vColor, 1);
+}
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+
+precision mediump float;
+varying vec4 fColor;
+
+
+void main()
+{
+    gl_FragColor = fColor;
+}
+</script>
+
+<script type="text/javascript" src="webgl-utils.js"></script>
+<script type="text/javascript" src="initShaders.js"></script>
+<script type="text/javascript" src="MV.js"></script>
+<script type="text/javascript" src="rotatingSquare2OneColor.js"></script>
+</head>
+
+<body>
+<p>
+Activate debugging in your browser with F12 and select "Console" in the debugger menu.</p>
+
+<button id="Direction">Change Rotation Direction</button>
+<button id="ChangeColor">Change Color</button>
+
+<select id="Controls" size="3">
+    <option value="0">Toggle Rotation Direction</option>
+    <option value="1">Spin Faster</option>
+    <option value="2">Spin Slower</option>
+</select>
+
+<canvas id="gl-canvas" width="512" height="512">
+Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
+</body>
+</html>

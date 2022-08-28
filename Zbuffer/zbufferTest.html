@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+<title>Zbuffer Test</title>
+
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+attribute vec3 vPosition;
+attribute vec3 vColor;
+varying vec4 color;
+
+void
+main()
+{
+    gl_Position = vec4(vPosition, 1.0);
+    color = vec4(vColor, 1.0);
+}
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+precision mediump float;
+   
+varying vec4 color;
+
+void
+main()
+{
+    gl_FragColor = color;
+}
+</script>
+
+<script type="text/javascript" src="../Common/webgl-utils.js"></script>
+<script type="text/javascript" src="../Common/initShaders.js"></script>
+<script type="text/javascript" src="../Common/MV.js"></script>
+<script type="text/javascript" src="zbufferTest.js"></script>
+</head>   
+
+<body>
+<div>
+<strong> Program :</strong>
+zbuffer testing <br>
+<strong> Written by:</strong>
+ Dianne Hansford &nbsp &nbsp  Jan 2017<br>
+<strong> Description:</strong>
+ 3 triangles parallel to xy-plane and one triangle cutting through z-space  <br>
+z-values range [-1,1]. z=-1 is close and z=0 is far<br>
+<strong> Try this:</strong>
+<ul>
+<li>Hit F12 to see print statements</li>
+<li>In js file, points can be moved.</li>
+<li>With zBuffer off, change the drawing order.</li>
+<li>See js file for an example of using "constants" to access color indices</li
+</ul>
+
+<select id="Controls" size="2">
+    <option value="0">Zbuffer on</option>
+    <option value="1">Zbuffer off</option> 
+</select>
+
+</div>
+
+
+<canvas id="gl-canvas" width="512" height="512">
+Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
+</body>
+</html>

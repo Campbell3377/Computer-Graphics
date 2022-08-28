@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+
+attribute vec2 vPosition;
+attribute  vec2 vTexCoord;
+varying vec2 fTexCoord;
+
+void
+main()
+{    
+    fTexCoord = vTexCoord;
+    gl_Position =  vec4(vPosition.x, vPosition.y, 0.0, 1.0);
+}
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+
+precision mediump float;
+
+varying vec2 fTexCoord;
+uniform sampler2D texture;
+
+void
+main()
+{
+    float d = 1.0/256.0;
+    float x = fTexCoord.x;
+    float y = fTexCoord.y;
+	
+	int smooth = 1;
+     
+	if(smooth == 1) {
+    gl_FragColor = 10.0*abs(
+        texture2D( texture, vec2(x+d, y))
+       -texture2D( texture, vec2(x-d, y)))
+       +10.0*abs(texture2D( texture, vec2(x, y+d))
+       -texture2D( texture, vec2(x, y-d)));
+	 }
+	 else {
+	  gl_FragColor = texture2D( texture, vec2(x, y));
+	 }
+
+    gl_FragColor.w = 1.0;
+}
+</script>
+
+
+<script type="text/javascript" src="../Common/webgl-utils.js"></script>
+<script type="text/javascript" src="../Common/initShaders.js"></script>
+<script type="text/javascript" src="honolulu4.js"></script>
+<script type="text/javascript" src="../Common/MV.js"></script>
+<script type="text/javascript" src="hawaiiImage.js"></script>
+
+<body>
+
+<p>
+ 
+This program demonstrates
+<ul>
+<li> Image display of height data from Hawaii. The raw data is given in the honolulu js file.</li>
+<li> Edge enhancement in the fragment shader. See code. <br>
+The texture is 256 x 256.  The enhancement algorithm looks at the texels surrounding the current texel. It adds a scalar (10x) the delta x and delta y texture values. </li> 
+
+</ul>
+
+</p>
+
+
+
+<canvas id="gl-canvas" width="512" height="512">
+Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
+</body>
+</html>

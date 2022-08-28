@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<h3> Open the console to see values</h3>
+<div>
+<p> Ortho parameters:<br>
+<button id = "Button1">Increase near/far</button>
+<button id = "Button2">Decrease near/far</button>
+<button id = "Button9">Wider</button>
+<button id = "Button10">Narrower</button>
+<button id = "Button11">Higher</button>
+<button id = "Button12">Shorter</button>
+</p>
+
+<p> Eye location: <br>
+<button id = "Button3">Increase eye radius</button>
+<button id = "Button4">Decrease eye radius</button>
+<button id = "Button5">Increase theta</button>
+<button id = "Button6">Decrease theta</button>
+<button id = "Button7">Increase phi</button>
+<button id = "Button8">Decrease phi</button>
+</p>
+ 
+<p>
+<button id = "Button13">Polygon Offset Toggle</button>
+<button id = "Button14">Triangle Mesh Toggle (HSR)</button>
+<button id = "Button15">Triangle Mesh Color Toggle</button>
+</p>
+</div>
+<p> </p>
+<script id="vertex-shader" type="x-shader/x-vertex">
+
+attribute  vec4 vPosition;
+
+uniform mat4 modelViewMatrix;
+uniform mat4 projectionMatrix;
+
+void main() 
+{
+    gl_Position = projectionMatrix*modelViewMatrix*vPosition;
+} 
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+
+precision mediump float;
+
+uniform vec4 fColor;
+
+void
+main()
+{
+    gl_FragColor = fColor;
+}
+</script>
+
+<script type="text/javascript" src="../Common/webgl-utils.js"></script>
+<script type="text/javascript" src="../Common/initShaders.js"></script>
+<script type="text/javascript" src="../Common/MV.js"></script>
+<script type="text/javascript" src="hat.js"></script>
+
+<body>
+
+
+<canvas id="gl-canvas" width="512" height="512" style="border:2px solid #000000;">
+Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
+<div>
+<h2> Bivariate Surface Display Demo</h2>
+This program demonstrates the wireframe display of a bivariate surface. Isoparametric curves on the surface are displayed -- that is the wireframe. <br>
+Z-buffer hidden surface removal and "polygon offset" are used to create the illusion that this is a pure wireframe model. The surface triangles are displayed in the background color. (This program implements triangle fans.)<br>
+The polygon offset function with the zbuffer flag LEQUAL fixes a z-fighting problem and improves the display.
+</div>
+
+
+
+</body>
+</html>

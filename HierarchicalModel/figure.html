@@ -1,0 +1,91 @@
+<html>
+
+<head>
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 15px;
+}
+</style>
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+
+attribute  vec4 vPosition;
+attribute  vec4 vColor;
+attribute  vec2 vTexCoord;
+
+varying vec4 fColor;
+varying vec2 fTexCoord;
+
+uniform mat4 modelViewMatrix;
+uniform mat4 projectionMatrix;
+uniform vec4 color;
+
+
+
+void main()
+{
+	fColor = vColor;
+    gl_Position = projectionMatrix * modelViewMatrix * vPosition;
+}
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+
+precision mediump float;
+varying vec4 fColor;
+varying  vec2 fTexCoord;
+
+uniform sampler2D Tex0;
+uniform sampler2D Tex1;
+
+void main()
+{
+  //gl_FragColor = fColor*(texture2D(Tex, fTexCoord));
+  {
+  int mychoice = 0;
+
+    // blend face color and both textures
+    if(mychoice == 0) {
+      gl_FragColor = fColor*(texture2D(Tex0, fTexCoord)*texture2D(Tex1, fTexCoord));
+    }
+    // blend textures only
+    if(mychoice == 1) {
+        gl_FragColor = (texture2D(Tex0, fTexCoord)*texture2D(Tex1, fTexCoord));
+    }
+    // blend face color and texture 0
+    if(mychoice == 2) {
+      gl_FragColor = fColor*(texture2D(Tex0, fTexCoord));
+    }
+    // blend face color and texture 1
+    if(mychoice == 3) {
+      gl_FragColor = fColor*(texture2D(Tex1, fTexCoord));
+    }
+
+  }
+}
+</script>
+
+
+
+<script type="text/javascript" src="../Common/webgl-utils.js"></script>
+<script type="text/javascript" src="../Common/InitShaders.js"></script>
+<script type="text/javascript" src="../Common/MV.js"></script>
+<script type="text/javascript" src="figure.js"></script>
+
+</head>
+<body>
+
+ <div>
+   Animate!<br>
+ </div>
+
+
+<canvas id="gl-canvas" width="512"" height="512"
+Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+
+attribute  vec4 vPosition;
+attribute  vec4 vColor;
+attribute  vec2 vTexCoord;
+
+varying vec4 fColor;
+varying vec2 fTexCoord;
+
+uniform vec3 theta;
+
+void main()
+{
+    // Compute the sines and cosines of theta for each of
+    //   the three axes in one computation.
+    vec3 angles = radians( theta );
+    vec3 c = cos( angles );
+    vec3 s = sin( angles );
+
+    // Remeber: thse matrices are column-major
+    mat4 rx = mat4( 1.0,  0.0,  0.0, 0.0,
+		    0.0,  c.x,  s.x, 0.0,
+		    0.0, -s.x,  c.x, 0.0,
+		    0.0,  0.0,  0.0, 1.0 );
+
+    mat4 ry = mat4( c.y, 0.0, -s.y, 0.0,
+		    0.0, 1.0,  0.0, 0.0,
+		    s.y, 0.0,  c.y, 0.0,
+		    0.0, 0.0,  0.0, 1.0 );
+
+
+    mat4 rz = mat4( c.z, -s.z, 0.0, 0.0,
+		    s.z,  c.z, 0.0, 0.0,
+		    0.0,  0.0, 1.0, 0.0,
+		    0.0,  0.0, 0.0, 1.0 );
+
+    fColor = vColor;
+    fTexCoord = vTexCoord;
+    gl_Position = rz * ry * rx * vPosition;
+}
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+
+precision mediump float;
+
+varying vec4 fColor;
+varying  vec2 fTexCoord;
+
+uniform sampler2D Tex0;
+uniform sampler2D Tex1;
+
+void
+main()
+{
+int mychoice = 1;
+
+	// blend face color and both textures
+	if(mychoice == 0) {
+		gl_FragColor = fColor*(texture2D(Tex0, fTexCoord)*texture2D(Tex1, fTexCoord));
+	}
+	// blend textures only
+	if(mychoice == 1) {
+			gl_FragColor = (texture2D(Tex0, fTexCoord)*texture2D(Tex1, fTexCoord));
+	}
+	// blend face color and texture 0
+	if(mychoice == 2) {
+		gl_FragColor = fColor*(texture2D(Tex0, fTexCoord));
+	}
+	// blend face color and texture 1
+	if(mychoice == 3) {
+		gl_FragColor = fColor*(texture2D(Tex1, fTexCoord));
+	}
+
+}
+</script>
+
+<script type="text/javascript" src="../Common/webgl-utils.js"></script>
+<script type="text/javascript" src="../Common/initShaders.js"></script>
+<script type="text/javascript" src="../Common/MV.js"></script>
+<script type="text/javascript" src="textureCubev3.js"></script>
+
+<body>
+
+<p>
+Please look at textureCubev2 first.
+<br>
+This program demonstrates
+<ul>
+<li> Creating two checkerboard textures.</li>
+<li> How to set up two textures</li>
+<li>Only one set of texture coordinates are used. They access the two checkerboards.</li>
+<li> Using the sampler to interpolate to two different textures in the fragment shader</li>
+<li> In the fragment shader the color assigned to each face of the cube can be blended with the color of the texture  OR put in decal mode by just using the texture. </li>
+<li> See the fragment shader to modify the blending of color and texture.</li>
+
+</ul>
+
+</p>
+
+
+
+<canvas id="gl-canvas" width="1024" height="1024">
+Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
+<button id = "ButtonX">Rotate X</button>
+<button id = "ButtonY">Rotate Y</button>
+<button id = "ButtonZ">Rotate Z</button>
+<button id = "ButtonT">Toggle Rotation</button>
+
+</body>
+</html>

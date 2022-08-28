@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+
+attribute vec2 vPosition;
+attribute  vec2 vTexCoord;
+varying vec2 fTexCoord;
+
+void
+main()
+{    
+    fTexCoord = vTexCoord;
+    gl_Position =  vec4(vPosition.x, vPosition.y, 0.0, 1.0);
+}
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+
+precision mediump float;
+
+varying vec2 fTexCoord;
+uniform sampler2D texture;
+
+void
+main()
+{
+    vec4 color = texture2D(texture, fTexCoord);
+	
+	// r,g,b are equal and between 0,1
+	// actually (99, 255) mapped to (0.39,1)
+	// You can create any mapping you want .... this one does this
+	// red stays as is
+	// green is piecewise linear function 
+	// As input goes 0 - 1 then 0 - 0.25 then 1 - 0
+	// blue is linear: as input goes 0 to 1, output 1 to 0
+	
+	
+    if(color.g < 0.5 ) color.g = 2.0*color.g;
+    else color.g = 2.0 - 2.0*color.g;
+	
+	color.b = 1.0-color.b;
+	
+	// testing the mapping of the original color function in js
+	/*
+	if(color.r < 0.38) {
+	  color.r = 0.0;
+	  color.g = 0.0;
+	  color.b = 0.0;
+	 }
+	 */
+	
+    
+	 
+    gl_FragColor = color;
+    
+}
+</script>
+
+
+<script type="text/javascript" src="../Common/webgl-utils.js"></script>
+<script type="text/javascript" src="../Common/initShaders.js"></script>
+<script type="text/javascript" src="../Common/MV.js"></script>
+<script type="text/javascript" src="hatImage1.js"></script>
+
+<body>
+<p>
+This program demonstrates
+<ul>
+<li> Using a function to create a monochromatic texture</li>
+<li> gl.LUMINANCE setting</li>
+<li> How to set texture coordinates</li>
+<li> Using the sampler to interpolate texture coordinates in the fragment shader</li>
+<li> Using the fragment shader to modify the monochromatic input to create color</li>
+</ul>
+</p>
+<canvas id="gl-canvas" width="1024" height="1024">
+Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
+</body>
+</html>

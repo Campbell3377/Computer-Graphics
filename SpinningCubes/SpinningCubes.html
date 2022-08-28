@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<style type="text/css">
+    canvas { background: black; }
+</style>
+
+
+
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+
+attribute  vec4 vPosition;
+attribute  vec4 vColor;
+varying vec4 fColor;
+
+uniform mat4 modelView;
+
+
+void main()
+{
+    gl_PointSize = 10.0;
+
+    fColor = vColor;
+    gl_Position = modelView * vPosition;
+
+}
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+
+precision mediump float;
+
+varying vec4 fColor;
+
+void
+main()
+{
+    gl_FragColor = fColor;
+}
+</script>
+
+<script type="text/javascript" src="../Common/webgl-utils.js"></script>
+<script type="text/javascript" src="../Common/initShaders.js"></script>
+<script type="text/javascript" src="../Common/MV.js"></script>
+<!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
+<!-- <script type="text/javascript" src="SpinningCubes.js"></script> -->
+<script type="text/javascript" src="createCube.js"></script>
+
+
+<body>
+
+<canvas id="gl-canvas" width="300" height="300" style="border:2px solid #000000;">
+Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
+
+</br>
+<table style "width:50%">
+  <tr>
+    <td><button id = "rotateX">Rotate X</button></td>
+    <td><button id = "rotateY">Rotate Y</button></td>
+    <td><button id = "rotateZ">Rotate Z</button></td>
+    <td><button id = "rotateRandom">Rotate Random Axis</button></td>
+  </tr>
+</table>
+
+<div>
+  <input id "slider" type="range" min="1" max="100" value="50" />
+</div>
+</br>
+
+<div style="font-family:verdana";>
+<h1> CSE 470 HW#2: Spinning Cubes!</h1>
+
+<strong>Author: </strong>Sean Campbell
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+<strong>Date: </strong>2/28/2022</br>
+
+</br>
+<strong>Description: </strong></br>This program is meant to create spinning cubes upon the user clicking the canvas,
+                                    As you can see, I have failed to do so and I must admit I found this project really difficult
+                                    If you read through some of the sections I commented out you will see that I tried to implement
+                                    the full functionality, but I have downgraded the functionality to make it run. You will see that I did
+                                    implement multiple cubes, the random axis, and the rotate and scale ended up sort of wonky, the latter of
+                                    which I had to remove. Lastly, I spent much of my time on this project figuring out how to do each part of
+                                    the process and as such, early on I was making zero progress trying to separate functionality into two
+                                    seperate js files and now there is definetely no chance for me to try and seperate it.
+</br>
+
+</br>
+<strong>Resources: </strong>Prof. Angel's codes. WebGL fundamentals website. Stack overflow</br>
+</br>
+</div>
+
+</body>
+</html>

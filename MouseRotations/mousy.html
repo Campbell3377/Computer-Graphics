@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+
+attribute  vec4 vPosition;
+attribute  vec4 vColor;
+varying vec4 fColor;
+
+uniform mat4 modelViewMatrix;
+uniform mat4 projectionMatrix;
+
+void main() 
+{
+	gl_PointSize = 10.0;
+    gl_Position = projectionMatrix*modelViewMatrix*vPosition;
+    fColor = vColor;
+} 
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+
+#ifdef GL_ES
+precision highp float;
+#endif
+
+
+varying vec4 fColor;
+
+void
+main()
+{
+    gl_FragColor = fColor;
+}
+</script>
+
+<script type="text/javascript" src="../Common/webgl-utils.js"></script>
+<script type="text/javascript" src="../Common/initShaders.js"></script>
+<script type="text/javascript" src="../Common/MV.js"></script>
+<script type="text/javascript" src="mousy.js"></script>
+
+<body style="font-family:verdana;">
+
+<div>
+<h1>Demonstrate Object Manipulation with the Mouse</h1>
+<h2>Change LookAt() parameters based on mouse click and movement.</h2>
+<h3>1) Move around object: Left button down and mouse change</h3>
+<h3>2) Zoom in/out: Right button down and mouse change</h3>
+<h3>See more of the inner-workings in the Console inspector</h3>
+</div>
+<div >
+LookAt parameters:
+<h4 id="lookEye"></h4>
+<h4 id="lookAt"></h4>
+<h4 id="lookUp"></h4>
+</div>
+
+<div>
+<canvas id="gl-canvas" width="512" height="512">
+Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
+</div>
+
+
+
+</body>
+</html>

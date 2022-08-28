@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+<title>E X P L O D E !</title>
+
+
+<!-- Vertex Shader -->
+<script id="vertex-shader" type="x-shader/x-vertex">
+
+// This is GLSL code (not HTML5)
+
+attribute vec4 vPosition;
+
+//HW470: uniforms to control explosion and color change
+uniform float xExpand;
+uniform float yExpand;
+uniform float colorShift;
+uniform float theta;
+//uniform float fade;
+
+//incoming color attribute and varying for fragment shader
+attribute vec3 vColor;
+varying vec4 color;
+
+void
+main()
+{
+	// HW470: explode the geometry x,y coords and set z and w
+	// Change the code below.
+	float x = xExpand;
+	float y = yExpand;
+
+	float dd = theta/theta;
+
+
+	float s = sin( theta);
+	float c = cos( theta);
+
+	gl_PointSize = 10.0;
+
+
+	gl_Position.x =  c * vPosition.x * x - s * vPosition.y * y;
+  gl_Position.y =  s * vPosition.x * x + c * vPosition.y * y;
+
+    gl_Position.z = 0.0;
+    gl_Position.w = 1.0;
+
+	//HW470: create a parameter to vary the color based on the explodeFactor
+
+
+	//HW470: Modify color with factor and clip to max valid value
+	float red = vColor.r - (1.0 - vColor.r)*colorShift; //+ colorShift.x;
+
+	float green = vColor.g + (1.0 - vColor.g)*colorShift; //+ colorShift.y;
+
+	float blue = vColor.b + (1.0 - vColor.b)*colorShift; //+ colorShift.z;
+
+
+    //set the varying color for the fragment shader
+    color = vec4(red, green, blue, 1.0);
+}
+</script>
+
+<!-- Fragment Shader -->
+<!-- (no change to this) -->
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+
+// This is GLSL code (not HTML5)
+
+precision mediump float;
+
+// Color coming in
+varying vec4 color;
+
+
+void
+main()
+{
+   //pass color to fragment shader
+    gl_FragColor = color;
+}
+</script>
+
+<!-- JS Utility codes and codes for this program -->
+<script type="text/javascript" src="../Common/webgl-utils.js"></script>
+<script type="text/javascript" src="../Common/initShaders.js"></script>
+<script type="text/javascript" src="../Common/MV.js"></script>
+<script type="text/javascript" src="explode.js"></script>
+</head>
+
+<body>
+<!--HW470: Add text to communicate what program does -->
+<div style="font-family:verdana";>
+<h1> CSE 470 HW#1: Explode!</h1>
+
+<strong>Author: </strong>Sean Campbell
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+<strong>Date: </strong>January 2022</br>
+
+</br>
+<strong>Description: </strong></br>This program creates a geometric object, in this case a cross, and shoots out 4 diamonds that fade into the background.
+</br>
+</br>
+<strong>How did you map color from the initial (r,g,b) to white?</strong></br>
+My thought was to increase each members r, g, and b values independently in such to make a convincing fade to white. To do this I
+made the colorShift value 'i/20' with i++ each cycle. Using red as an example it looks like r + (1-r)*colorShift, meaining we are adding the remainder of each
+color multiplied by colorShift in such a way that after 20 cycles the remainder will be multiplied by '20/20' so the total will be 1.0 for r, g, and b.
+</br>
+</br>
+<strong>Resources: </strong>Prof. Angel's codes. I also used other sources like the webgl fundamentals page and forums like stack overflow.
+As an additional note, I was mostly using my own problem solving, so in hindsight a proper translation matrix is likely what I should have done, but the solution
+I came up with introduced a stretching effect that I liked and thus kept.</br>
+</br>
+</div>
+
+<canvas id="gl-canvas" width="512" height="512" style="border:2px solid #000000;">
+Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
+
+</body>
+</html>

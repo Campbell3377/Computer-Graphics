@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+<title>Surface of Rotation!</title>
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+
+attribute vec3 vPosition;
+attribute vec3 vNormal;
+attribute vec4 vColor;
+varying vec4 fColor;
+
+uniform vec4 ambientProduct, diffuseProduct, specularProduct;
+uniform mat4 modelViewMatrix;
+uniform mat4 projectionMatrix;
+uniform vec4 lightPosition;
+uniform float shininess;
+uniform int colorFlag;
+
+void main()
+{
+
+
+  vec4 pos4D = vec4(vPosition, 1.0);
+	vec4 nor4D = vec4(vNormal, 0.0);
+
+	if(colorFlag == 1) {
+
+      //compute lighting in eye coordinates
+    vec3 pos = (modelViewMatrix * pos4D).xyz;
+	// input light has been defined in eye coords in js
+    vec3 light = lightPosition.xyz;
+    vec3 L = normalize( light - pos );
+
+	// eye coordinates assumes eye at origin
+	vec3 eyePoint = vec3(0.0, 0.0, 0.0);
+	vec3 E = normalize( eyePoint - pos );
+
+    // halfway vector
+    vec3 H = normalize( L + E );
+
+    // Transform vertex normal into eye coordinates
+    vec3 N = normalize( (modelViewMatrix*nor4D).xyz);
+
+    // Compute terms in the illumination equation
+    vec4 ambient = ambientProduct;
+
+    float Kd = max( dot(L, N), 0.0 );
+    vec4  diffuse = Kd*diffuseProduct;
+
+	// play: this is how you might do debugging;
+	//setting colors on condition
+	//if(dot(L, N) < 0.0) diffuse = vec4(1.0, 0.0, 0.0, 1.0);
+
+    float Ks = pow( max(dot(N, H), 0.0), shininess );
+    vec4  specular = Ks * specularProduct;
+
+    if( dot(L, N) < 0.0 ) {
+	specular = vec4(0.0, 0.0, 0.0, 1.0);
+    }
+
+	// play
+	//diffuse = vec4(0.0, 0.0, 0.0, 1.0);
+	//ambient = vec4(0.0, 0.0, 0.0, 1.0);
+	//specular = vec4(0.0, 0.0, 0.0, 1.0);
+
+
+    fColor = ambient + diffuse +specular;
+	fColor.a = 1.0;
+	}
+	else {
+	fColor = vec4(1.0, 1.0, 0.0, 1.0);
+	}
+    //fColor = ambient + diffuse +specular;
+    //fColor.a = 1.0;
+    gl_PointSize = 20.0;
+    gl_Position = projectionMatrix * modelViewMatrix * pos4D;
+}
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+
+#ifdef GL_ES
+precision highp float;
+#endif
+//precision mediump float;
+varying vec4 fColor;
+
+void
+main()
+{
+    gl_FragColor = fColor;
+}
+</script>
+
+<script type="text/javascript" src="../Common/webgl-utils.js"></script>
+<script type="text/javascript" src="../Common/initShaders.js"></script>
+<script type="text/javascript" src="../Common/MV.js"></script>
+<script type="text/javascript" src="Campbell_hw3.js"></script>
+
+<body style="font-family:verdana;">
+  <h1> CSE 470 HW#3: Surface of Revolution!</h1>
+
+  <strong>Author: </strong>Sean Campbell
+  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+  <strong>Date: </strong>4/8/2022</br>
+
+  </br>
+  <strong>Description: </strong></br>This program creates a Parameterized Surface of Revolution, defaulted to a cylineder
+  </br>
+  </br>
+  <strong>How did you map color from the initial (r,g,b) to white?</strong></br>
+  My second, line was a simple quadratic that when revolves forms an hourglass/wormhole shape
+  </br>
+  </br>
+  <strong>Resources: </strong>I used almost exclusively the class code and any support for issues in doing the actual coding was done with stack overflow.</br>
+  </br>
+  </div>
+
+<canvas id="gl-canvas" width="512" height="512">
+Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
+
+<div>
+  Change Surface of Revolution (default: Cylinder)<br>
+  <button id = "ButtonChangeSOR">Change SOR</button>
+</div>
+<div>
+Fov Scale (scale default)<br>
+fov: 10<input id="fovSlider" type="range"
+ min="10.0" max="100.0" step="1.0" value="60.0" />100<br>
+ Shininess Scale (scale default)<br>
+ fov: 1<input id="shininessSlider" type="range"
+  min="1.0" max="100.0" step="1.0" value="1.0" />100
+ </div>
+ <div>
+   Material<br>   <!--Buttons to change material -->
+   <button id = "ButtonE">Emerald</button>
+   <button id = "ButtonR">Ruby</button>
+ </div>
+ <div>
+   Light Location<br>   <!--Button to change light location -->
+   <button id = "ButtonChangeLoc">Change Light Loc</button>
+ </div>
+ <div>
+   Light Color(random)<br>  <!--Button to change light color -->
+   <button id = "ButtonChangeL">Change Light Color</button>
+ </div>
+
+ <div >
+ LookAt parameters:
+ <h4 id="lookEye"></h4>
+ <h4 id="lookAt"></h4>
+ <h4 id="lookUp"></h4>
+ </div>
+
+
+
+</body>
+</html>

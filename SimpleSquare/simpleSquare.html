@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+
+<!-- This is a simple html document with a vertex shader and a fragment shader -->
+<!-- This is how you make a comment in HTML  -->
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+
+<!-- Create a title in the browser Tab  -->
+<title>Simple Square</title>
+
+<!-- A webGL program MUST have a vertex shader and a fragment shader -->
+
+<!-- Vertex shader written in GLSL. -->
+<!-- Notice the script tag -->
+<!-- This is a "pass thru" vertex shader  -->
+<!-- Just passing the vertex to the fragment shader without calculations  -->
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+attribute vec4 vPosition;
+
+void main()
+{
+	//This is a comment on GLSL language
+    gl_Position = vPosition;
+
+
+}
+</script>
+
+
+<!-- Fragment shader written in GLSL  -->
+<!-- It is setting the color of the square  -->
+<!-- color defined by (Red, Green, Blue, 1.0)  -->
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+
+// must set precision
+precision mediump float;
+
+void main()
+{
+	// This is a comment in GLSL
+	// Set the color (Red, Green, Blue, Alpha) All values between [0,1]
+    gl_FragColor = vec4( 1.0, 1.0, 0.0, 1.0 );
+
+}
+</script>
+
+<!-- Here are the js files used by this program"  -->
+<!-- If the Common folder not in correct place, nothing will display  -->
+<!-- The first three files are libraries and the last one is our program -->
+
+<script type="text/javascript" src="webgl-utils.js"></script>
+<script type="text/javascript" src="initShaders.js"></script>
+<script type="text/javascript" src="MV.js"></script>
+<script type="text/javascript" src="simpleSquare.js"></script>
+
+</head>
+
+<!-- Here is some text for the html document  -->
+<!-- Good practice: describe what the program does and any user interaction available -->
+<!-- The text can go anywhere on the page  -->
+
+<body>
+<h1> Simple Square Demo: Get started with html, javascript, and webgl
+</h1>
+<p>
+Activate debugging in your browser with F12 and select "Console" in the debugger menu.</br>
+Find the print statements in the js code.
+</p>
+
+<h2>Try this:</h2>
+<ul>
+<li> Change the color of the square (see the fragment shader in simpleSquare.html)</li>
+<li> Change the shape of the square  (see simpleSquare.js)</li>
+<li> Move a vertex outside of the [-1,1] x [-1, 1] canvas (see simpleSquare.js) </li>
+</ul>
+
+
+<!-- Create the window for displaying the simple square with HTML5 canvas element  -->
+<!-- Specify the size in pixels -->
+<!-- A border helps when getting started learning computer graphics -->
+
+ <canvas id="gl-canvas" width="512" height="120" style="border:2px solid #000000;">
+Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
+
+<p>You can add text below the canvas too!</p>
+
+
+</body>
+</html>
